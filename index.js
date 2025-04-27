@@ -33,8 +33,11 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
-
-
+app.get("/health", (req, res) => {
+    return res.json({
+        message: "Everything working fine."
+    })
+})
   
 
 
