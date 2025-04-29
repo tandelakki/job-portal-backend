@@ -20,12 +20,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 const corsOptions = {
-    origin: [
-      "http://localhost:5173",
-      "https://melodious-trifle-c56bff.netlify.app"
-    ],
-    credentials: true,
-  };
+    origin:'http://localhost:5173',
+    
+    credentials:true
+}
 app.use(cors(corsOptions));
 
 
