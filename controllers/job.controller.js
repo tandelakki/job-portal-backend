@@ -20,7 +20,7 @@ export const postJob = async (req, res) => {
             created_by: userId
         });
         //await newJob.save();
-        res.status(201).json({ message: 'Job posted successfully', job });
+        res.status(201).json({  success: true, message: 'Job posted successfully', job });
 
     } catch (error) {
         console.error(error);
@@ -56,9 +56,9 @@ export const getAllJobs = async (req, res) => {
 export const getJobById = async (req, res) => { 
     try {
         const jobId = req.params.id;
-        const job = await Job.findById(jobId).populate({
-            path: 'application',
-        });
+        const job = await Job.findById(jobId)
+            .populate('company') // Populate company to get logo, name, location, etc.
+            .populate('application')
 
         if (!job) {
             return res.status(404).json({ message: 'Job not found', success: false });

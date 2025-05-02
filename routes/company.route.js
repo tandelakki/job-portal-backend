@@ -6,7 +6,7 @@ import { singleUpload } from "../middlewares/multer.js";
 const router = express.Router();
 
 
-router.post("/register",isAuthenticated, registerCompany);
+router.post("/register",isAuthenticated, singleUpload, registerCompany);
 router.route("/get").get(isAuthenticated,getCompany);
 router.route("/get/:id").get(isAuthenticated,getCompanyById);
 router.put("/update/:id", isAuthenticated,singleUpload, updateCompany);

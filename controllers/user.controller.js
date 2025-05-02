@@ -17,8 +17,10 @@ export const register = async (req, res) => {
             });
         };
         const file = req.file;
+        console.log(file);
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content)
+        
 
         const user = await User.findOne({ email })
         if (user) {
@@ -124,6 +126,7 @@ export const updateProfile = async (req, res) => {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         
         const file = req.file;
+        console.log(file)
         
 
         const fileUri = getDataUri(file);
