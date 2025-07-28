@@ -1,61 +1,37 @@
-// import jwt from 'jsonwebtoken';
-
-// const isAuthenticated = (req, res, next) => {
-//     console.log('Authorization Header:', req.headers.authorization);
-
-//     const token = req.headers.authorization?.split(' ')[1];
-
-//     if (!token) {
-//         console.log('No token provided');
-//         return res.status(401).json({ message: 'No token provided' });
-//     }
-
-//     try {
-//         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-//         req.user = decoded;
-//         req.id = decoded.id; // Ensure userId is set in the request object
-//         next();
-//     } catch (error) {
-//         console.error('JWT verification error:', error);
-//         return res.status(401).json({ message: 'Invalid token' });
-//     }
-// };
-
-// export default isAuthenticated;
-
 import jwt from "jsonwebtoken";
 
+// Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
-    try {
-        const token = req.cookies.token;
-        console.log(token)
-    
+  try {
+    // 1. Read token from cookies
+    const token = req.cookies.token;
+    console.log("Auth Middleware - Token:", token);
 
-
-
-        if (!token) {
-            return res.status(401).json({
-                message: "User not authenticated",
-                success: false,
-            })
-        }
-
-        
-        const decode = jwt.verify(token, process.env.SECRET_KEY);
-        if (!decode) {
-            return res.status(401).json({
-                message: "Invalid token",
-                success: false
-            })
-        }
-        req.id = decode.userId;
-        next();
-    } catch (error) {
-        console.log(error)
-        return "error"
+    // 2. If no token, reject request
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated. Token missing.",
+      });
     }
 
-}
+    // 3. Verify token
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    console.log("Auth Middleware - Decoded:", decoded);
+
+    // 4. Attach user ID to request
+    req.id = decoded.userId;
+    req.user = decoded; // (optional) for full payload access
+
+    // 5. Pass control to next middleware/route
+    next();
+  } catch (error) {
+    console.error("Auth Middleware Error:", error.message);
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
+};
 
 export default isAuthenticated;
-
