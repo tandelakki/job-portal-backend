@@ -100,12 +100,20 @@ export const login = async (req, res) => {
         }
         
 
-        return res.status(200).cookie("token",token).json({
-            message: `Welcome back ${user.fullname}`,
-            user,
-            success: true,
-            token
-        })
+       return res.status(200)
+  .cookie("token", token, {
+    httpOnly: true,        // Prevent JS access
+    secure: true,          // Required on HTTPS (Render)
+    sameSite: "None",      // Allows cross-origin cookies
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  })
+  .json({
+    message: `Welcome back ${user.fullname}`,
+    user,
+    success: true,
+    token
+  });
+
     } catch (error) {
         console.log(error)
 
